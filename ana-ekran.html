@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0b0b">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LAS+">
+    <link rel="apple-touch-icon" href="https://image2url.com/r2/default/images/1770960142382-c401f1cc-b33d-4688-908b-d488f42fdc58.png">
+    
+    <title id="siteTitle">LAS+ | Ana Sayfa</title>
+    <meta name="description" id="metaDesc" content="LAS+ ile binlerce film ve diziyi kesintisiz izle.">
+    <meta name="keywords" id="metaKeys" content="film izle, dizi izle, las plus">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --bg-color: #0b0b0b; 
+            --text-color: #ffffff; 
+            --primary-red: #e50914;
+            --nav-bg: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            --card-radius: 8px; 
+            --modal-bg: #181818;
+            --search-bg: rgba(20, 20, 20, 0.98);
+            --font-main: 'Roboto', sans-serif;
+            --btn-radius: 6px;
+            --stat-color: #46d369;
+            --ai-primary: #e50914; 
+            --ai-secondary: #ff4b2b;
+            --glow-color: transparent;
+            --editor-gold: #d4af37;
+        }
+
+        /* GECE YARISI MODU (MIDNIGHT MODE) EFEKTLERÄ° */
+        body.midnight-mode {
+            --bg-color: #020000;
+            --primary-red: #ff002b;
+            --nav-bg: linear-gradient(to bottom, rgba(20,0,0,0.9) 0%, transparent 100%);
+            --glow-color: rgba(255,0,0,0.05);
+        }
+        body.midnight-mode .logo-img { filter: drop-shadow(0 0 10px rgba(255,0,0,0.8)); }
+
+        /* RETRO EASTER EGG EFEKTÄ° */
+        body.retro-mode {
+            font-family: 'Courier New', Courier, monospace !important;
+            filter: sepia(0.5) contrast(1.2) saturate(1.2) hue-rotate(20deg);
+        }
+        body.retro-mode::after {
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+
+        html {
+            scroll-behavior: smooth; 
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            background-image: radial-gradient(circle at 50% 0%, var(--glow-color) 0%, transparent 70%);
+            color: var(--text-color); font-family: var(--font-main); padding-bottom: 80px; overflow-x: hidden; min-height: 100vh; transition: background 0.8s ease, --primary-red 0.5s ease; 
+            margin: 0;
+            -webkit-overflow-scrolling: touch; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        a { text-decoration: none; color: inherit; }
+
+        .ripple { position: relative; overflow: hidden; }
+        .ripple::after {
+            content: ""; display: block; position: absolute; width: 100%; height: 100%;
+            top: 0; left: 0; pointer-events: none;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 10.01%);
+            background-repeat: no-repeat; background-position: 50%;
+            transform: scale(10, 10); opacity: 0; transition: transform .5s, opacity 1s;
+        }
+        .ripple:active::after { transform: scale(0, 0); opacity: .3; transition: 0s; }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: opacity, transform;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        #scrollToTopBtn {
+            position: fixed; bottom: 90px; right: 20px;
+            background: var(--primary-red); color: white; border: none;
+            border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem;
+            cursor: pointer; z-index: 1000; opacity: 0; visibility: hidden;
+            transform: translateY(20px); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+            display: flex; align-items: center; justify-content: center;
+        }
+        #scrollToTopBtn.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #scrollToTopBtn:hover { background: white; color: var(--primary-red); transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 25px rgba(229, 9, 20, 0.6); }
+
+        .global-loader { position: fixed; inset: 0; background-color: rgba(11, 11, 11, 0.95); z-index: 999999; display: flex; justify-content: center; align-items: center; opacity: 1; visibility: visible; transition: opacity 0.3s ease-out, visibility 0.3s ease-out; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .global-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader-content-wrap { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; }
+        .loader-logo { width: 55px; height: auto; position: absolute; z-index: 2; animation: pulseLogo 2s infinite ease-in-out; filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.5)); }
+        .loader-spinner { width: 100%; height: 100%; border-radius: 50%; border: 4px solid rgba(229, 9, 20, 0.1); border-top-color: var(--primary-red); animation: spinLoader 1s linear infinite; z-index: 1; }
+        @keyframes spinLoader { to { transform: rotate(360deg); } }
+        @keyframes pulseLogo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(0.95); } }
+
+        #quoteScreen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 1.5s ease; padding: 20px; text-align: center; }
+        .quote-text { font-size: 1.8rem; font-style: italic; font-weight: 300; margin-bottom: 15px; color: #fff; }
+        .quote-author { font-size: 1rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+
+        .navbar { 
+            position: fixed; top: 0; width: 100%; 
+            padding: calc(env(safe-area-inset-top, 20px) + 15px) 5% 15px 5%;
+            display: flex; align-items: center; justify-content: space-between; 
+            z-index: 1000; background: var(--nav-bg); transition: 0.3s ease; 
+        }
+        .navbar.scrolled { background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .logo-img { height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); cursor: pointer; transition: 0.3s; }
+        .nav-right { display: flex; align-items: center; gap: 15px; position: relative; }
+
+        .search-wrapper { position: relative; display: flex; align-items: center; background: transparent; border-radius: 20px; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .search-input { width: 0; padding: 0; border: none; background: transparent; color: white; font-size: 1rem; transition: 0.4s; opacity: 0; border-radius: 20px; }
+        .search-wrapper.active { background: rgba(30,30,30,0.9); border: 1px solid #444; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .search-wrapper.active .search-input { width: 200px; padding: 10px 15px; opacity: 1; }
+        .icon-btn { background: none; border: none; color: var(--text-color); cursor: pointer; padding: 10px; border-radius: 50%; font-size: 1.1rem; transition: transform 0.2s, color 0.2s; }
+        .icon-btn:hover { color: var(--primary-red); transform: scale(1.1); }
+
+        .search-chips { display: flex; gap: 5px; padding: 5px 10px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .s-chip { background: rgba(255,255,255,0.1); color: #ccc; font-size: 0.75rem; padding: 4px 10px; border-radius: 15px; white-space: nowrap; cursor: pointer; transition: 0.2s;}
+        .s-chip:hover { background: var(--primary-red); color: white; }
+
+        .search-results { position: absolute; top: 60px; right: 0; width: 320px; background: var(--search-bg); padding: 0; display: none; flex-direction: column; z-index: 1500; border-radius: var(--card-radius); box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); max-height: 50vh; overflow-y: auto; backdrop-filter: blur(10px); }
+        .search-results.active { display: flex; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .s-item { display: flex; gap: 15px; padding: 10px; align-items: center; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .s-item:hover { background: rgba(255,255,255,0.1); padding-left: 15px; } 
+        .s-img { width: 45px; height: 65px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+        
+        .notif-wrapper { position: relative; margin-right: 5px; cursor: pointer; display: flex; align-items: center; }
+        .notif-icon { font-size: 1.3rem; color: var(--text-color); transition: 0.2s; }
+        .notif-icon:hover { color: var(--primary-red); transform: scale(1.1); }
+        .notif-badge { position: absolute; top: -5px; right: -6px; background: var(--primary-red); color: white; font-size: 0.65rem; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--nav-bg); display: none; animation: pulseBadge 2s infinite; }
+        @keyframes pulseBadge { 0% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(229, 9, 20, 0); } 100% { box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); } }
+        
+        .notif-dropdown { position: absolute; top: 55px; right: -10px; width: 360px; background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 16px; display: none; flex-direction: column; overflow: hidden; z-index: 4000; box-shadow: 0 20px 60px rgba(0,0,0,0.9), inset 0 0 1px rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.1); }
+        .notif-dropdown.active { display: flex; animation: slideDown 0.3s ease; }
+        
+        .notif-header { padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); font-weight: 800; font-size: 1.15rem; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); }
+        .mark-read-btn { font-size: 0.8rem; color: var(--primary-red); cursor: pointer; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .mark-read-btn:hover { color: #ff4b2b; }
+        
+        .notif-body { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; scrollbar-width: thin; }
+        .notif-item { padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 15px; align-items: flex-start; transition: 0.2s; cursor: pointer; position: relative; }
+        .notif-item:hover { background: rgba(255,255,255,0.08); }
+        .notif-item.unread { background: linear-gradient(90deg, rgba(229, 9, 20, 0.1) 0%, transparent 100%); border-left: 4px solid var(--primary-red); }
+        .notif-item-icon { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #2a2a35, #1a1a20); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
+        .notif-item.unread .notif-item-icon { background: linear-gradient(135deg, var(--primary-red), #ff4b2b); border: none; }
+        .notif-content { flex: 1; min-width: 0; }
+        .notif-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; color: #fff; }
+        .notif-text { font-size: 0.85rem; color: #bbb; line-height: 1.5; margin-bottom: 6px; }
+        .notif-time { font-size: 0.75rem; color: #777; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+        .unread-dot { width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); box-shadow: 0 0 10px var(--primary-red); }
+
+        .profile-wrapper { position: relative; display: flex; align-items: center; gap: 10px;}
+        .avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.3s; }
+        .avatar:hover { transform: scale(1.1); border-color: var(--primary-red); }
+        
+        .user-badge-icon { background: var(--gold, #f5b50a); color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; position: absolute; bottom: -5px; right: -5px; border: 2px solid var(--bg-color); box-shadow: 0 0 10px rgba(245,181,10,0.5); cursor: pointer;}
+
+        .profile-dropdown { position: absolute; top: 55px; right: 0; width: 240px; background: var(--search-bg); border-radius: 8px; display: none; flex-direction: column; overflow-y: auto; max-height: 70vh; z-index: 4000; box-shadow: 0 5px 20px rgba(0,0,0,0.5); border: 1px solid #333; backdrop-filter: blur(10px); }
+        .profile-dropdown.active { display: flex; animation: slideDown 0.3s ease; }
+        .dropdown-item { padding: 14px; color: var(--text-color); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: 0.2s;}
+        .dropdown-item:hover { background: rgba(255,255,255,0.1); padding-left: 18px; color: var(--primary-red); }
+        .dropdown-item svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; transition: 0.2s; }
+
+        .social-feed { position: fixed; bottom: 80px; left: 20px; background: rgba(10,10,15,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 280px; z-index: 900; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fadeRight 0.5s ease; }
+        @keyframes fadeRight { from {opacity:0; transform:translateX(-20px);} to {opacity:1; transform:translateX(0);}}
+        .sf-header { background: rgba(0,0,0,0.5); padding: 10px 15px; font-size: 0.8rem; font-weight: bold; color: #aaa; display: flex; justify-content: space-between; align-items: center;}
+        .sf-close { cursor: pointer; font-size: 1rem; color: #666; transition: 0.2s;}
+        .sf-close:hover { color: white; }
+        .sf-items { max-height: 150px; overflow-y: auto; scrollbar-width: none; padding: 10px;}
+        .sf-item { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 0.8rem; animation: slideDown 0.4s ease;}
+        .sf-item img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover;}
+        .sf-info { flex: 1; line-height: 1.3;}
+        .sf-info span { color: var(--primary-red); font-weight: bold;}
+        .sf-time { font-size: 0.7rem; color: #666; }
+
+        @media (max-width: 768px) { 
+            .search-results { position: fixed; top: calc(75px + env(safe-area-inset-top, 20px)); left: 50%; transform: translateX(-50%); width: 90%; right: auto; z-index: 5000; } 
+            .notif-dropdown { position: fixed; top: calc(75px + env(safe-area-inset-top, 20px)); right: 5%; width: 90%; max-height: 70vh; }
+            .social-feed { display: none !important; }
+            .popup-box { width: 100%; max-width: 100%; height: 100vh; max-height: 100vh; border-radius: 0; }
+        }
+
+        .hero-container { width: 100%; height: 80vh; position: relative; overflow: hidden; margin-top: calc(-70px - env(safe-area-inset-top, 20px)); }
+        .hero-slider { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; scroll-behavior: smooth; }
+        .hero-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: start; position: relative; background-size: cover; background-position: center; display: flex; align-items: flex-end; transition: transform 0.5s; }
+        .hero-slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-color) 5%, rgba(0,0,0,0.5) 50%, transparent 100%); }
+        .hero-content { position: relative; z-index: 10; padding: 0 5% 60px 5%; width: 100%; text-align: center; animation: fadeUp 1s ease-out; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-title { font-size: 3.8rem; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 4px 20px rgba(0,0,0,0.9); letter-spacing: 2px;}
+        .hero-tags { font-size: 1.1rem; color: #ddd; margin-bottom: 25px; font-weight: 500; text-shadow: 0 2px 4px black; }
+        
+        .hero-btns { display: flex; gap: 15px; width: 100%; max-width: 450px; margin: 0 auto; z-index: 20; position: relative; }
+        .btn { flex: 1; padding: 14px; border-radius: var(--btn-radius); font-weight: 700; font-size: 1rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+        .btn:active { transform: scale(0.95); }
+        .btn-play { background: white; color: black; }
+        .btn-play:hover { background: var(--primary-red); color: white; box-shadow: 0 5px 20px rgba(229, 9, 20, 0.5); }
+        .btn-info { background: rgba(109, 109, 110, 0.7); color: white; backdrop-filter: blur(10px); }
+        .btn-info:hover { background: rgba(150, 150, 150, 0.8); }
+
+        .slider-dots { position: absolute; bottom: 25px; width: 100%; display: flex; justify-content: center; gap: 8px; z-index: 20; }
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.3); border-radius: 50%; transition: all 0.4s ease; cursor: pointer; }
+        .dot.active { background: #fff; transform: scale(1.3); width: 25px; border-radius: 10px; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        /* ð¨ KATEGORÄ° BUTONLARI DÃZELTÄ°LDÄ°: YUVARLAK YERÄ°NE KAPSÃL ÅEKLÄ° GARANTÄ°LENDÄ° ð¨ */
+        .category-bar { display: flex; gap: 12px; padding: 0 5%; margin-top: 25px; margin-bottom: 25px; overflow-x: auto; scrollbar-width: none; align-items: center; }
+        .category-btn { 
+            background: rgba(255,255,255,0.1); color: var(--text-color); border: 1px solid rgba(255,255,255,0.2); 
+            padding: 10px 20px !important; border-radius: 25px !important; font-size: 0.95rem; font-weight: 500; cursor: pointer; 
+            white-space: nowrap !important; width: auto !important; flex-shrink: 0 !important; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            min-width: max-content;
+        }
+        .category-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); border-color: var(--primary-red); box-shadow: 0 5px 15px rgba(229, 9, 20, 0.2); }
+        
+        .btn-ai-advisor { background: linear-gradient(45deg, var(--ai-primary), var(--ai-secondary)) !important; color: white !important; border: none !important; box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4); font-weight: 800; animation: pulseGlow 2s infinite;}
+        @keyframes pulseGlow { 0% {box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);} 50% {box-shadow: 0 0 20px rgba(229, 9, 20, 0.8);} 100% {box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);} }
+        
+        .btn-reels { background: linear-gradient(45deg, #00f2fe, #4facfe) !important; color: black !important; font-weight: 800; border:none!important;}
+        .btn-tinder { background: linear-gradient(45deg, #fd297b, #ff655b) !important; color: white !important; font-weight: 800; border:none!important;}
+
+        .row { margin: 15px 0 45px 0; padding-left: 5%; overflow: hidden; position: relative; }
+        .row-header { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; color: var(--text-color); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        
+        .toggle-row-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--text-color); cursor: pointer; transition: all 0.3s ease; }
+        .toggle-row-btn:hover { background: var(--primary-red); border-color: var(--primary-red); transform: scale(1.1); }
+        .toggle-row-btn.open { transform: rotate(180deg); background: rgba(255,255,255,0.2); }
+
+        .sliders { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; padding-right: 5%; scroll-snap-type: x mandatory; scrollbar-width: none; transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        
+        /* ð¨ Ä°ÅTE AÅAÄI AÃILAN OKLARIN ÃALIÅMASINI SAÄLAYAN MÃKEMMEL 2-ROW GRID ð¨ */
+        .sliders.two-rows {
+            display: grid !important;
+            grid-template-rows: repeat(2, auto);
+            grid-auto-flow: column;
+            grid-auto-columns: 140px; 
+            gap: 15px;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            padding-right: 5%;
+            padding-bottom: 20px;
+            scroll-snap-type: x mandatory;
+        }
+        @media (min-width: 500px) {
+            .sliders.two-rows { grid-auto-columns: 150px; }
+        }
+        @media (min-width: 768px) {
+            .sliders.two-rows { grid-auto-columns: 180px; }
+        }
+        .sliders.two-rows .card {
+            width: 100% !important;
+            flex: none;
+            margin-right: 0;
+            scroll-snap-align: start;
+        }
+        /* --------------------------------------------------------------------------------- */
+
+        .card { flex: 0 0 auto; width: 140px; scroll-snap-align: start; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; position: relative; }
+        .card:hover { transform: scale(1.08) translateY(-5px); z-index: 10; }
+        
+        .card-img-wrapper { position: relative; width: 100%; height: 210px; margin-bottom: 8px; border-radius: var(--card-radius); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s; border: 1px solid transparent; }
+        .card:hover .card-img-wrapper { box-shadow: 0 10px 25px rgba(0,0,0,0.8); border-color: rgba(255,255,255,0.2); }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; background: #222; transition: transform 0.5s ease; }
+        .card:hover .card-img-wrapper img { transform: scale(1.1); }
+        
+        .badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.8); color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid #444; backdrop-filter: blur(4px); z-index: 5; display: flex; align-items: center; gap: 3px;}
+        .badge-age { left: 8px; right: auto; background: var(--primary-red); border: none; }
+        .card-info { padding: 0 4px; }
+        .card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; transition: color 0.2s; }
+        .card:hover .card-title { color: var(--primary-red); }
+
+        .top10-card { display: flex; align-items: center; position: relative; width: 220px; flex: 0 0 auto; scroll-snap-align: start; cursor:pointer; transition:0.3s; margin-right: 15px;}
+        .top10-card:hover { transform: scale(1.08) translateX(10px); z-index: 10; }
+        .top10-number { font-size: 9rem; font-weight: 900; -webkit-text-stroke: 3px #555; color: var(--bg-color); line-height: 1; margin-right: -40px; z-index: 1; text-shadow: 4px 0 10px rgba(0,0,0,0.8); transition: 0.3s; }
+        .top10-card:hover .top10-number { -webkit-text-stroke: 3px var(--primary-red); text-shadow: 0 0 20px rgba(229, 9, 20, 0.5); }
+        .top10-img { width: 120px; height: 175px; object-fit: cover; border-radius: 6px; z-index: 2; box-shadow: 0 4px 15px rgba(0,0,0,0.8); border: 1px solid #333; transition: 0.3s; }
+        .top10-card:hover .top10-img { border-color: var(--primary-red); }
+
+        /* ð¨ YENÄ° ALTYAPI: EDÄ°TÃRÃN SEÃÄ°MLERÄ° ð¨ */
+        .editor-sliders { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 25px; padding-right: 5%; scroll-snap-type: x mandatory; scrollbar-width: none; }
+        .editor-card { flex: 0 0 auto; width: 320px; height: 180px; scroll-snap-align: start; cursor: pointer; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .editor-card:hover { transform: scale(1.05) translateY(-5px); border-color: var(--editor-gold); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4); z-index: 10; }
+        .editor-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.5s; }
+        .editor-card:hover img { opacity: 1; transform: scale(1.1); }
+        .editor-info { position: absolute; bottom: 0; width: 100%; padding: 20px 15px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; }
+        .editor-badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); color: var(--editor-gold); padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; border: 1px solid rgba(212, 175, 55, 0.5); display: flex; align-items: center; gap: 5px; }
+        .editor-title { font-size: 1.2rem; font-weight: 800; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 5px black; }
+
+        .upcoming-card { flex: 0 0 auto; width: 250px; scroll-snap-align: start; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; border-radius: 8px; overflow: hidden; background: #111; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .upcoming-card:hover { transform: scale(1.05) translateY(-5px); z-index: 10; border-color: var(--primary-red); box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4); }
+        .upcoming-card img { width: 100%; height: 140px; object-fit: cover; opacity: 0.7; transition: 0.5s; }
+        .upcoming-card:hover img { opacity: 1; transform: scale(1.1); }
+        .up-info { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); display: flex; justify-content: space-between; align-items: flex-end; }
+        .up-title { font-weight: bold; font-size: 1rem; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;}
+        .up-date { color: var(--primary-red); font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; }
+        .btn-remind { background: rgba(0,0,0,0.5); border: 1px solid white; color: white; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px); display: flex; align-items: center; gap: 5px; font-weight: bold;}
+        .btn-remind:hover { background: white; color: black; transform: scale(1.05); }
+
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 6000; display: none; align-items: flex-end; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .modal.active { display: flex; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content { width: 100%; background: var(--modal-bg); border-radius: 24px 24px 0 0; max-height: 85vh; overflow-y: auto; position: relative; animation: slideUpModal 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.1); }
+        @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-hero { height: 300px; background-size: cover; background-position: center; position: relative; }
+        .modal-hero::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, var(--modal-bg) 5%, transparent); }
+        .close-btn { position: absolute; top: 15px; right: 15px; z-index: 20; width: 35px; height: 35px; background: rgba(30,30,30,0.7); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px); }
+        .close-btn:hover { background: var(--primary-red); transform: rotate(90deg); }
+        .modal-body { padding: 25px; margin-top: -60px; position: relative; z-index: 5; }
+        .m-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; line-height:1.1; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        
+        .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top:20px;}
+        .btn-full-width { grid-column: span 2; background: linear-gradient(45deg, #1a1a1a, #2b2b2b) !important; border: 1px solid #444 !important; }
+        .btn-full-width:hover { background: #333 !important; }
+        
+        .btn-kanka { background: linear-gradient(45deg, #8E2DE2, #4A00E0) !important; color: white !important; grid-column: span 2;}
+
+        /* Ãzel HatÄ±rlat Butonu (Modaldaki) */
+        .btn-modal-remind { background: linear-gradient(45deg, #0071eb, #00c6ff) !important; color: white !important; grid-column: span 2; border: none !important; font-size: 1.1rem; padding: 16px; }
+
+        /* TINDER MODAL */
+        .tinder-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 7000; display: none; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; backdrop-filter: blur(10px);}
+        .tinder-modal.active { display: flex; animation: fadeIn 0.3s;}
+        .t-header { position: absolute; top: 30px; width: 100%; text-align: center; color: white; font-size: 1.5rem; font-weight: 900; text-shadow: 0 2px 10px rgba(253, 41, 123, 0.5);}
+        .t-close { position: absolute; top: 30px; right: 20px; font-size: 2rem; color: white; cursor: pointer; z-index: 10; transition: 0.3s;}
+        .t-close:hover { color: #fd297b; transform: scale(1.2) rotate(90deg); }
+        
+        .t-card-stack { position: relative; width: 300px; height: 450px; margin-top: 50px;}
+        .t-card { position: absolute; inset: 0; background: #222; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); border: 2px solid #444; transition: transform 0.3s, opacity 0.3s; transform-origin: bottom center;}
+        .t-card img { width: 100%; height: 100%; object-fit: cover;}
+        .t-card-info { position: absolute; bottom: 0; width: 100%; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white;}
+        .t-card-info h3 { font-size: 1.5rem; margin-bottom: 5px;}
+        
+        .t-controls { display: flex; gap: 30px; margin-top: 40px; z-index: 10;}
+        .t-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: 0.2s;}
+        .t-btn:hover { transform: scale(1.1); }
+        .t-btn:active { transform: scale(0.9); }
+        .t-nope { background: white; color: #fd297b; }
+        .t-like { background: linear-gradient(45deg, #fd297b, #ff655b); color: white; }
+
+        /* KATEGORÄ° PENCERESÄ° */
+        .full-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .popup-box { width: 90%; max-width: 800px; background: var(--bg-color); border-radius: 16px; display: flex; flex-direction: column; max-height: 80vh; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); animation: scaleUp 0.3s ease; }
+        .fm-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .fm-title { font-size: 1.2rem; font-weight: bold; color: var(--text-color); }
+        .fm-close { font-size: 1.5rem; cursor: pointer; color: var(--text-color); transition: 0.2s; }
+        .fm-close:hover { color: var(--primary-red); transform: scale(1.2); }
+        .fm-search-bar { padding: 10px 20px; background: rgba(0,0,0,0.2); }
+        .fm-search-input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-color); font-size: 1rem; transition: 0.3s; }
+        .fm-search-input:focus { background: rgba(255,255,255,0.1); border-color: var(--primary-red); }
+        .fm-grid { flex: 1; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; }
+        .grid-card { cursor: pointer; transition: 0.3s; position: relative; }
+        .grid-card:hover { transform: scale(1.08) translateY(-5px); z-index: 2; }
+        .grid-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 5px; background: #222; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s; }
+        .grid-card:hover img { box-shadow: 0 10px 20px rgba(229,9,20,0.3); border: 1px solid var(--primary-red); }
+        .grid-title { font-size: 0.85rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; font-weight: 500;}
+        .grid-card:hover .grid-title { color: white; }
+
+        .genre-grid { padding: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; overflow-y: auto; max-height: 500px; }
+        .genre-card { height: 100px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.8); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .genre-card:hover { transform: scale(1.05) translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .genre-card:active { transform: scale(0.95); }
+        .g-action { background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%); }
+        .g-comedy { background: linear-gradient(135deg, #FDBB2D 0%, #22C1C3 100%); }
+        .g-drama  { background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); }
+        .g-horror { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); border:1px solid #444; }
+        .g-scifi  { background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); }
+        .g-romance{ background: linear-gradient(135deg, #fc00ff 0%, #00dbde 100%); }
+        .g-advent { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .g-anim   { background: linear-gradient(135deg, #F7971E 0%, #FFD200 100%); }
+        .g-crime  { background: linear-gradient(135deg, #302b63 0%, #24243e 100%); }
+        .g-fantasy{ background: linear-gradient(135deg, #C33764 0%, #1D2671 100%); }
+
+        @media (min-width: 768px) {
+            .navbar { padding: calc(env(safe-area-inset-top, 0px) + 15px) 4% 15px 4%; }
+            .modal-content { width: 700px; max-height: 90vh; border-radius: 16px; transform: scale(0.95); }
+            .modal.active .modal-content { transform: scale(1); }
+            .card { width: 180px; }
+            .card-img-wrapper { height: 270px; }
+            .genre-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .fm-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .grid-card img { height: 225px; }
+            .social-feed { display: flex !important; }
+        }
+
+        /* MATRIX CANVAS */
+        #matrixCanvas { position: fixed; inset: 0; z-index: 9998; display: none; pointer-events: none; opacity: 0.8;}
+
+        /* YAPAY ZEKA MODALI */
+        #aiAdvisorModal { display: none; align-items: center; justify-content: center; z-index: 8000; }
+        #aiAdvisorModal.active { display: flex; }
+        
+        .ai-glass-panel { background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); width: 100%; max-width: 600px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(229, 9, 20, 0.15); overflow: hidden; display: flex; flex-direction: column; animation: scaleUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        
+        .ai-header { padding: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: space-between; position: relative; background: rgba(0,0,0,0.3); }
+        .ai-brand { display: flex; align-items: center; gap: 15px; }
+        .ai-brand img { height: 32px; object-fit: contain; filter: drop-shadow(0 0 5px var(--ai-primary)); }
+        .ai-brand h3 { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(to right, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .ai-brand span { font-size: 0.85rem; color: var(--primary-red); font-weight: 600;}
+
+        .ai-chat-area { display: flex; flex-direction: column; gap: 20px; padding: 25px; max-height: 50vh; overflow-y: auto; scrollbar-width: none; }
+        .ai-bubble { max-width: 85%; padding: 15px 20px; font-size: 0.95rem; line-height: 1.5; animation: fadeUp 0.4s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .ai-bubble.system { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px 20px 20px 4px; color: #e2e8f0; align-self: flex-start; backdrop-filter: blur(5px); }
+        .ai-bubble.user { background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)); border-radius: 20px 20px 4px 20px; color: white; align-self: flex-end; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4); }
+
+        .ai-movie-card { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 12px; margin-top: 15px; display: flex; gap: 15px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .ai-movie-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--stat-color); transition:0.3s;}
+        .ai-movie-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px) scale(1.02); border-color: rgba(255,255,255,0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .ai-movie-img { width: 75px; height: 110px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.5);}
+        .ai-movie-info { display: flex; flex-direction: column; justify-content: center;}
+        .ai-movie-info h4 { margin: 0 0 5px 0; font-size: 1.2rem; color: white; font-weight: 800;}
+        .ai-movie-info p { margin: 0; font-size: 0.85rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+        
+        .ai-play-btn { margin-top: 10px; align-self: flex-start; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 6px; transition: 0.2s; border: 1px solid rgba(255,255,255,0.2);}
+        .ai-movie-card:hover .ai-play-btn { background: var(--primary-red); color: white; border-color: var(--primary-red); transform: scale(1.05); }
+
+        .quick-prompts { display: flex; gap: 10px; overflow-x: auto; padding: 0 25px 15px 25px; scrollbar-width: none; }
+        .qp-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: 0.3s;}
+        .qp-chip:hover { background: rgba(255,255,255,0.15); color: white; border-color: var(--primary-red); transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.3);}
+
+        .ai-input-box { padding: 20px 25px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 12px; align-items: center;}
+        .ai-input { flex: 1; padding: 16px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.5); color: white; font-size: 1rem; outline: none; transition: 0.3s;}
+        .ai-input:focus { border-color: var(--ai-primary); background: rgba(0,0,0,0.8); box-shadow: 0 0 15px rgba(229, 9, 20, 0.3);}
+        .ai-send { background: linear-gradient(135deg, var(--ai-primary), var(--ai-secondary)); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);}
+        .ai-send:hover { transform: scale(1.1) rotate(15deg); box-shadow: 0 8px 20px rgba(229, 9, 20, 0.6); }
+        .ai-send:active { transform: scale(0.95); }
+        
+        body.no-scroll { overflow: hidden !important; touch-action: none; }
+    </style>
+</head>
+<body>
+
+<div id="specialThemeOverlay" style="position:fixed; inset:0; pointer-events:none; z-index:9999; display:none;"></div>
+<canvas id="matrixCanvas"></canvas>
+
+<button id="scrollToTopBtn" class="ripple" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<div id="loader" class="global-loader">
+    <div class="loader-content-wrap">
+        <img src="https://image2url.com/r2/default/images/1770960142382-c401f1cc-b33d-4688-908b-d488f42fdc58.png" alt="LAS+" class="loader-logo">
+        <div class="loader-spinner"></div>
+    </div>
+</div>
+
+<div id="quoteScreen" style="display: none;">
+    <div class="quote-text" id="qText">"..."</div>
+    <div class="quote-author" id="qAuthor">- YÃ¼kleniyor</div>
+</div>
+
+<nav class="navbar" id="navbar">
+    <img src="https://image2url.com/r2/default/images/1770960142382-c401f1cc-b33d-4688-908b-d488f42fdc58.png" id="mainLogo" alt="LAS+" class="logo-img" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" />
+    
+    <div class="nav-right">
+        <div class="search-wrapper" id="searchBox">
+            <div style="display:flex; flex-direction:column; width:100%;">
+                <input type="text" class="search-input" id="searchInput" placeholder="Film, Dizi, Oyuncu ara..." />
+            </div>
+            <button class="icon-btn voice-btn" onclick="startVoiceSearch()"><i class="fas fa-microphone"></i></button> 
+            <button class="icon-btn" onclick="toggleSearch()">
+                <svg viewbox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg> 
+            </button>
+        </div>
+        
+        <div class="search-results" id="searchResults">
+            <div class="search-chips" id="searchChips">
+                </div>
+            <div id="searchItemsCont"></div>
+        </div>
+
+        <div class="notif-wrapper" id="notifWrapper" onclick="toggleNotif()">
+            <i class="fas fa-bell notif-icon"></i>
+            <div class="notif-badge" id="notifBadge">0</div>
+            <div class="notif-dropdown" id="notifDropdown" onclick="event.stopPropagation()">
+                <div class="notif-header">Bildirimler <span class="mark-read-btn" onclick="bildirimleriOkunduIsaretle(event)"><i class="fas fa-check-double"></i> TÃ¼mÃ¼nÃ¼ Okundu Ä°Åaretle</span></div>
+                <div class="notif-body" id="notifList">
+                    <div style="padding: 20px; text-align: center; color: #777;">YÃ¼kleniyor...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-wrapper">
+            <img class="avatar" id="navAvatar" onclick="toggleMenu()" />
+            <div class="user-badge-icon" id="userBadge" title="Sinema Gurusu" style="display:none;"><i class="fas fa-crown"></i></div>
+            
+            <div class="profile-dropdown" id="profileMenu">
+                <div class="dropdown-item" style="background: rgba(255,255,255,0.05); font-weight: bold; border-bottom: 1px solid #333; cursor: default;">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg> 
+                    <span id="menuUserName">KullanÄ±cÄ±</span>
+                </div>
+                <a id="pwaInstallBtn" class="dropdown-item" style="display: none;"><svg viewBox="0 0 24 24"><path d="M17 18H7V6h10v1zm0-16.99L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zM12 16l4-4h-3V7h-2v5H8l4 4z"></path></svg> UygulamayÄ± Ä°ndir</a>
+                <a href="profil-secimi.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg> Profil DeÄiÅtir</a> 
+                <a href="profil-harita.html" class="dropdown-item" style="color: #ffb703;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></svg> Sinematik Haritam</a>
+                <a href="ozel-listeler.html" class="dropdown-item" style="color: #4facfe;"><svg viewBox="0 0 24 24"><path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"></path></svg> Ãzel Listelerim</a>
+                <a href="#" onclick="odayaKatil(); return false;" class="dropdown-item" style="color: #66b2ff;"><svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></svg> Oda Koduyla KatÄ±l</a> 
+                <a href="ozet.html" class="dropdown-item" style="color: #46d369;"><svg viewBox="0 0 24 24"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"></path></svg> AylÄ±k LAS+ Ãzetin</a> 
+                <a href="listem.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6l5-3z"></path></svg> Ä°zleme Listem</a> 
+                <a href="indirilenler.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"></path></svg> Ä°ndirilenler</a> 
+                <a href="izleme-gecmisi.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></svg> GeÃ§miÅ</a> 
+                <a href="mesajlar.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path></svg> CanlÄ± Destek</a> 
+                <a href="ayarlar.html" class="dropdown-item"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L5.09 9.66c-.12.2-.07.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path></svg> Ayarlar</a> 
+                <a href="kahramanlarimiz.html" class="dropdown-item" style="color: #ff4b2b;"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg> KahramanlarÄ±mÄ±z</a>
+                <a href="#" onclick="cikisYap(); return false;" class="dropdown-item" style="color: var(--primary-red);"><svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></svg> ÃÄ±kÄ±Å</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-container fade-in-section is-visible">
+    <div class="hero-slider" id="heroSlider"></div>
+    <div class="slider-dots" id="heroDots"></div>
+</div>
+
+<div class="category-bar fade-in-section is-visible">
+    <button class="category-btn btn-ai-advisor ripple" onclick="openAIAdvisor()"><i class="fas fa-magic"></i> Ne Ä°zlesem?</button> 
+    <button class="category-btn btn-reels ripple" onclick="location.href='kesfet.html'"><i class="fas fa-play"></i> KeÅfet (Reels)</button>
+    <button class="category-btn btn-tinder ripple" onclick="openTinderMatch()"><i class="fas fa-heart"></i> EÅleÅ & Ä°zle</button>
+    <button class="category-btn ripple" onclick="kategoriAc('film', 'Filmler')">Filmler</button> 
+    <button class="category-btn ripple" onclick="kategoriAc('dizi', 'Diziler')">Diziler</button> 
+    <button class="category-btn ripple" onclick="turleriGoster()">TÃ¼rler</button> 
+    <button class="category-btn btn-surprise ripple" onclick="beniSasirt()"><i class="fas fa-dice"></i> Beni ÅaÅÄ±rt</button>
+</div>
+
+<div id="continueWatchingArea" style="display:none;" class="fade-in-section is-visible"></div>
+
+<div id="editorPicksArea"></div>
+
+<div id="contentArea"></div>
+
+<div class="social-feed" id="socialFeed">
+    <div class="sf-header">
+        <span><i class="fas fa-users" style="color:var(--primary-red);"></i> ArkadaÅlarÄ±n Ne Ä°zliyor?</span>
+        <i class="fas fa-times sf-close" onclick="document.getElementById('socialFeed').style.display='none'"></i>
+    </div>
+    <div class="sf-items" id="sfItems">
+        </div>
+</div>
+
+<div class="modal" id="myModal">
+    <div class="modal-content">
+        <div class="close-btn ripple" onclick="modalKapat()">â</div>
+        <div class="modal-hero" id="mHero"></div>
+        <div class="modal-body">
+            <h2 class="m-title" id="mTitle">...</h2>
+            
+            <div class="m-meta" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+                <span id="mMatchBadge" style="color: #46d369; font-weight: bold; background: rgba(70, 211, 105, 0.1); padding: 4px 8px; border-radius: 4px;">%98 EÅleÅme</span> 
+                <span id="mYear" style="color: #ccc;">2024</span> 
+                <span style="border: 1px solid #666; padding: 0 4px; border-radius: 3px; font-size: 0.7rem; color: #aaa;">HD</span>
+            </div>
+            
+            <p class="m-desc" id="mDesc" style="color: #ddd; line-height: 1.6;">...</p>
+            
+            <div class="modal-btns" id="mBtnsContainer">
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="tinder-modal" id="tinderModal">
+    <div class="t-header">BÄ°RLÄ°KTE NE Ä°ZLESEK?</div>
+    <div class="t-close" onclick="closeTinderMatch()">â</div>
+    
+    <div style="color:#aaa; font-size:0.95rem; text-align:center; max-width:80%; margin-top:10px; line-height: 1.4;">
+        Sevgiline veya arkadaÅÄ±na bir link gÃ¶nderdin varsayalÄ±m. Ä°kiniz de filmleri kaydÄ±rÄ±yorsunuz! Ä°kinizin de beÄendiÄi ilk film otomatik aÃ§Ä±lÄ±r.
+    </div>
+
+    <div class="t-card-stack" id="tCardStack">
+        </div>
+
+    <div class="t-controls">
+        <button class="t-btn t-nope ripple" onclick="tinderSwipe('left')"><i class="fas fa-times"></i></button>
+        <button class="t-btn t-like ripple" onclick="tinderSwipe('right')"><i class="fas fa-heart"></i></button>
+    </div>
+</div>
+
+<div class="full-modal" id="categoryModal">
+    <div class="popup-box">
+        <div class="fm-header"><span class="fm-title" id="catTitle">Kategori</span> <span class="fm-close" onclick="kategoriKapat()">â</span></div>
+        <div class="fm-search-bar"><input type="text" class="fm-search-input" id="catSearch" placeholder="Bu kategoride ara..." onkeyup="kategoriAra()" /></div>
+        <div class="fm-grid" id="categoryGrid"></div>
+    </div>
+</div>
+
+<div class="full-modal" id="genreModal">
+    <div class="popup-box">
+        <div class="fm-header"><span class="fm-title">TÃ¼r SeÃ§in</span> <span class="fm-close" onclick="document.getElementById('genreModal').style.display='none'">â</span></div>
+        <div class="genre-grid">
+            <div class="genre-card g-action ripple" onclick="turSec('Aksiyon')">Aksiyon</div>
+            <div class="genre-card g-comedy ripple" onclick="turSec('Komedi')">Komedi</div>
+            <div class="genre-card g-drama ripple" onclick="turSec('Dram')">Dram</div>
+            <div class="genre-card g-scifi ripple" onclick="turSec('Bilim Kurgu')">Bilim Kurgu</div>
+            <div class="genre-card g-romance ripple" onclick="turSec('Romantik')">Romantik</div>
+            <div class="genre-card g-advent ripple" onclick="turSec('Macera')">Macera</div>
+            <div class="genre-card g-anim ripple" onclick="turSec('Animasyon')">Animasyon</div>
+            <div class="genre-card g-fantasy ripple" onclick="turSec('Fantastik')">Fantastik</div>
+            <div class="genre-card g-horror ripple" onclick="turSec('Korku')">Korku</div>
+            <div class="genre-card g-crime ripple" onclick="turSec('SuÃ§')">SuÃ§</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="aiAdvisorModal">
+    <div class="ai-glass-panel">
+        <div class="ai-header">
+            <div class="ai-brand">
+                <img src="https://image2url.com/r2/default/images/1770960142382-c401f1cc-b33d-4688-908b-d488f42fdc58.png" alt="LAS+ AI" />
+                <div>
+                    <h3>LAS+ AI Asistan</h3>
+                    <span>KiÅisel Sinema DanÄ±ÅmanÄ±n</span>
+                </div>
+            </div>
+            <div class="close-btn" onclick="closeAIAdvisor()" style="position: static; background: rgba(255,255,255,0.1);">â</div>
+        </div>
+        <div class="ai-chat-area" id="aiChatBox">
+            <div class="ai-bubble system">Selam patron! ð Ben LAS+ yapay zeka asistanÄ±n. BugÃ¼n nasÄ±l bir ruh halindesin veya ne tarz bir Åey izlemek istiyorsun?</div>
+        </div>
+        <div class="quick-prompts">
+            <div class="qp-chip ripple" onclick="askAILocal('AÄlamak istiyorum, dram Ã¶nerir misin?')">ð¢ AÄlamak Ä°stiyorum</div>
+            <div class="qp-chip ripple" onclick="askAILocal('Ãok yorgunum, Ã§erezlik komedi ver.')">ð¤£ Ãerezlik Komedi</div>
+            <div class="qp-chip ripple" onclick="askAILocal('Beyin yakan, ters kÃ¶Åe yapan bir film.')">ð¤¯ Ters KÃ¶Åe / Gizem</div>
+            <div class="qp-chip ripple" onclick="askAILocal('Bol aksiyonlu, patlamalÄ± Åeyler.')">ð¥ PatlamalÄ± Aksiyon</div>
+        </div>
+        <div class="ai-input-box">
+            <input type="text" class="ai-input" id="aiInput" placeholder="Ruh halini yaz... (Ãrn: Ãok canÄ±m sÄ±kkÄ±n)" onkeypress="if(event.key === 'Enter') askAILocal()" /> 
+            <button class="ai-send ripple" onclick="askAILocal()"><i class="fas fa-arrow-up"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    function observeNewElements() {
+        document.querySelectorAll('.fade-in-section:not(.is-visible)').forEach(el => {
+            scrollObserver.observe(el);
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('scrollToTopBtn');
+        const navbar = document.getElementById('navbar');
+        
+        if (window.scrollY > 300) {
+            btn.classList.add('show');
+        } else {
+            btn.classList.remove('show');
+        }
+
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    function showLoader() { const l = document.getElementById('loader'); if(l) { l.style.display = 'flex'; setTimeout(() => { l.classList.remove('hidden'); l.style.opacity = '1'; l.style.visibility = 'visible'; }, 10); } }
+    function hideLoader() { const l = document.getElementById('loader'); if(l) { l.classList.add('hidden'); l.style.opacity = '0'; l.style.visibility = 'hidden'; setTimeout(() => { l.style.display = 'none'; }, 300); } }
+
+    const API_BASE = 'backend/api/icerik';
+    
+    const userToken = localStorage.getItem('user_token');
+    if (!userToken) window.location.href = 'giris.html';
+
+    const mainUser = JSON.parse(localStorage.getItem('user_data') || '{}');
+    const activeProfile = JSON.parse(localStorage.getItem('active_profile') || '{}');
+
+    let activeModalItem = null;
+    let allSearchData = [];
+    let currentCategoryData = []; 
+    let bildirimler = [];
+    let tinderCards = [];
+
+    const getNotifKey = () => 'las_read_notifs_' + (mainUser.id || 'guest');
+    const getHatirlaticiKey = () => 'las_hatirlaticilar_' + (mainUser.id || 'guest');
+    
+    let keysPressed = '';
+    window.addEventListener('keydown', (e) => {
+        keysPressed += e.key.toLowerCase();
+        
+        if(keysPressed.includes('matrix')) {
+            keysPressed = '';
+            document.getElementById('matrixCanvas').style.display = 'block';
+            startMatrixRain();
+            showToast("Sisteme sÄ±zÄ±ldÄ±... HoÅ geldin Neo.");
+        }
+        
+        if(keysPressed.includes('retro')) {
+            keysPressed = '';
+            document.body.classList.toggle('retro-mode');
+            if(document.body.classList.contains('retro-mode')) showToast("90'lara geri dÃ¶nÃ¼ldÃ¼!");
+        }
+        
+        if(keysPressed.length > 20) keysPressed = keysPressed.substring(5);
+    });
+
+    function checkMidnightMode() {
+        const hour = new Date().getHours();
+        if (hour >= 2 && hour <= 5) {
+            document.body.classList.add('midnight-mode');
+            setTimeout(() => showToast("Gece kuÅlarÄ±na Ã¶zel moda geÃ§ildi ð¦"), 2000);
+        }
+    }
+
+    const installBtn = document.getElementById('pwaInstallBtn');
+    let deferredPrompt = null;
+
+    const isIos = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test( userAgent );
+    }
+    
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches;
+
+    if (isInStandaloneMode()) { installBtn.style.display = 'none'; } 
+    else { installBtn.style.display = 'flex'; }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('Motor HatasÄ±:', err));
+        });
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (!isInStandaloneMode()) installBtn.style.display = 'flex';
+    });
+
+    installBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (deferredPrompt !== null) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') { installBtn.style.display = 'none'; }
+            deferredPrompt = null;
+        } else if (isIos()) {
+            alert("ð iPhone/iPad Kurulumu:\n\n1. Safari'nin alt menÃ¼sÃ¼ndeki 'PaylaÅ' simgesine dokunun.\n2. MenÃ¼yÃ¼ aÅaÄÄ± kaydÄ±rÄ±p 'Ana Ekrana Ekle' seÃ§eneÄine basÄ±n.\n\nLAS+ telefonunuza uygulama olarak eklenecektir!");
+        } else {
+            alert("ð» Kurulum:\n\nTarayÄ±cÄ±nÄ±zÄ±n menÃ¼sÃ¼nden 'Ana Ekrana Ekle' veya 'UygulamayÄ± YÃ¼kle' seÃ§eneÄini kullanarak indirebilirsiniz.");
+        }
+    });
+
+    function showToast(msg) {
+        const existing = document.getElementById('lasToast');
+        if(existing) existing.remove();
+        const alertBox = document.createElement('div');
+        alertBox.id = 'lasToast';
+        alertBox.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+        alertBox.style.cssText = "position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--primary-red); color:white; padding:12px 25px; border-radius:30px; font-weight:bold; z-index:9999; box-shadow:0 5px 15px rgba(0,0,0,0.5); display:flex; gap:10px; align-items:center; white-space:nowrap; animation: fadeUp 0.3s ease;";
+        document.body.appendChild(alertBox);
+        setTimeout(() => alertBox.style.opacity = '0', 3200);
+        setTimeout(() => alertBox.remove(), 3500);
+    }
+
+    async function loadTheme() {
+        try {
+            const res = await fetch('backend/api/sistem/tema.php');
+            const data = await res.json();
+            
+            if(data && data.durum && data.aktif) {
+                if(data.ana_renk) {
+                    document.documentElement.style.setProperty('--primary-red', data.ana_renk);
+                    document.documentElement.style.setProperty('--ai-primary', data.ana_renk);
+                }
+                if(data.arkaplan) {
+                    document.documentElement.style.setProperty('--bg-color', data.arkaplan);
+                }
+                if(data.efekt_css) {
+                    const style = document.createElement('style');
+                    style.innerHTML = data.efekt_css;
+                    document.head.appendChild(style);
+                }
+                if(data.efekt_html) {
+                    const overlay = document.getElementById('specialThemeOverlay');
+                    if(overlay) {
+                        overlay.innerHTML = data.efekt_html;
+                        overlay.style.display = 'block';
+                    }
+                }
+                if(data.logo) {
+                    const logoEl = document.getElementById('mainLogo');
+                    if(logoEl) logoEl.src = data.logo;
+                }
+            }
+        } catch(e) {}
+    }
+
+    const quotes = [
+        { q: "GÃ¼Ã§ seninle olsun.", a: "Star Wars" },
+        { q: "Ona reddedemeyeceÄi bir teklif yapacaÄÄ±m.", a: "Baba (The Godfather)" },
+        { q: "Neden bu kadar ciddisin?", a: "Kara ÅÃ¶valye (The Dark Knight)" },
+        { q: "Ä°lk kural: DÃ¶vÃ¼Å KulÃ¼bÃ¼ hakkÄ±nda konuÅmamak.", a: "DÃ¶vÃ¼Å KulÃ¼bÃ¼ (Fight Club)" },
+        { q: "Geri dÃ¶neceÄim.", a: "TerminatÃ¶r" }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTheme(); 
+        loadSiteSettings(); 
+        checkMidnightMode(); 
+        
+        document.getElementById('menuUserName').innerText = activeProfile.ad || mainUser.ad || 'KullanÄ±cÄ±';
+
+        document.getElementById('quoteScreen').style.display = 'flex';
+        const randQ = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById('qText').innerText = `"${randQ.q}"`;
+        document.getElementById('qAuthor').innerText = `- ${randQ.a}`;
+        setTimeout(() => {
+            document.getElementById('quoteScreen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('quoteScreen').style.display = 'none'; }, 1500);
+        }, 2000);
+
+        const navAvatar = document.getElementById('navAvatar');
+        let avatarUrl = activeProfile.avatar || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+        navAvatar.src = avatarUrl;
+        
+        let totalWatched = JSON.parse(localStorage.getItem('kullanici_listem') || '[]').length;
+        if(totalWatched > 5) document.getElementById('userBadge').style.display = 'flex';
+
+        setupSearch();
+        baslat();
+        fetchBildirimler(); 
+        initSocialFeed(); 
+        observeNewElements(); 
+
+        window.addEventListener('click', function(e){   
+            if (!document.querySelector('.profile-wrapper').contains(e.target)) {
+                document.getElementById('profileMenu').classList.remove('active');
+            }
+            const nWrap = document.getElementById('notifWrapper');
+            if (nWrap && !nWrap.contains(e.target)) {
+                document.getElementById('notifDropdown').classList.remove('active');
+            }
+            const sWrap = document.querySelector('.search-wrapper');
+            const sRes = document.getElementById('searchResults');
+            if (!sWrap.contains(e.target) && !sRes.contains(e.target)) {
+                sRes.classList.remove('active');
+                document.getElementById('searchBox').classList.remove('active');
+            }
+        });
+    });
+
+    function createSlug(str) {
+        let trMap = { 'Ã§Ã':'c', 'ÄÄ':'g', 'ÅÅ':'s', 'Ã¼Ã':'u', 'Ä±Ä°':'i', 'Ã¶Ã':'o' };
+        for(let key in trMap) { str = str.replace(new RegExp('['+key+']','g'), trMap[key]); }
+        return str.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    async function loadSiteSettings() {
+        try {
+            const res = await fetch('backend/api/sistem/ayarlar.php');
+            const data = await res.json();
+            if (data && data.site_adi) {
+                document.title = data.seo_title || `${data.site_adi} | Ana Sayfa`;
+                if (data.seo_desc) document.getElementById('metaDesc').content = data.seo_desc;
+                if (data.seo_keywords) document.getElementById('metaKeys').content = data.seo_keywords;
+                if (data.site_logo && !document.getElementById('specialThemeOverlay').innerHTML) {
+                    document.getElementById('mainLogo').src = data.site_logo; 
+                }
+            }
+        } catch(e) {}
+    }
+
+    function openAIAdvisor() { document.getElementById('aiAdvisorModal').classList.add('active'); document.body.classList.add('no-scroll'); setTimeout(()=> document.getElementById('aiInput').focus(), 300); }
+    function closeAIAdvisor() { document.getElementById('aiAdvisorModal').classList.remove('active'); document.body.classList.remove('no-scroll'); }
+
+    async function askAILocal(quickText = null) {
+        let userText = quickText || document.getElementById('aiInput').value.trim();
+        if(!userText) return; 
+        
+        const chatBox = document.getElementById('aiChatBox');
+        chatBox.innerHTML += `<div class="ai-bubble user">${userText}</div>`;
+        document.getElementById('aiInput').value = '';
+        
+        const loadingId = 'loading_' + Date.now();
+        chatBox.innerHTML += `<div class="ai-bubble system ai-thinking" id="${loadingId}"><div style="display:flex; align-items:center; gap:10px; color:#aaa; font-size:0.9rem;"><i class="fas fa-circle-notch fa-spin" style="color:var(--ai-primary)"></i> <span id="${loadingId}_text">Ne dediÄini dÃ¼ÅÃ¼nÃ¼yorum...</span></div></div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        await new Promise(r => setTimeout(r, 700));
+        let thinkText = document.getElementById(`${loadingId}_text`);
+        if(thinkText) thinkText.innerText = "ArÅive iniyorum, listeyi tarÄ±yorum...";
+
+        await new Promise(r => setTimeout(r, 900));
+
+        let txt = userText.toLowerCase();
+        const greetings = ['selam', 'merhaba', 'naber', 'nasÄ±lsÄ±n', 'hey', 'gÃ¼naydÄ±n', 'iyi akÅamlar', 'iyi geceler', 'sa'];
+        const isGreeting = greetings.some(g => txt === g || txt.startsWith(g + ' ') || txt.endsWith(' ' + g));
+        
+        if (isGreeting && !txt.includes('film') && !txt.includes('dizi') && !txt.includes('Ã¶ner')) {
+            document.getElementById(loadingId).remove();
+            chatBox.innerHTML += `<div class="ai-bubble system">Selam patron! ð Ben LAS+ AsistanÄ±n. AlgoritmalarÄ±m tÄ±kÄ±r tÄ±kÄ±r Ã§alÄ±ÅÄ±yor. Senin iÃ§in arÅivi taramaya hazÄ±rÄ±m, bugÃ¼n nasÄ±l bir ruh halindesin? Ne tarz bir Åeyler izlemek istersin?</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+        }
+
+        if (txt.includes('teÅekkÃ¼r') || txt.includes('saÄol') || txt.includes('eyvallah') || txt.includes('harika')) {
+            document.getElementById(loadingId).remove();
+            chatBox.innerHTML += `<div class="ai-bubble system">Ne demek, gÃ¶revimiz! BaÅka bir isteÄin olursa ben buralardayÄ±m. Ä°zlediÄin Åeye bayÄ±lacaÄÄ±na eminim! ð¿</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+        }
+
+        if (thinkText) thinkText.innerText = "Senin iÃ§in en iyisini seÃ§iyorum...";
+        await new Promise(r => setTimeout(r, 600));
+
+        document.getElementById(loadingId).remove();
+
+        let targetGenres = [];
+        let aiMessage = "Hmm, sÃ¶ylediklerini analiz ettim ve aklÄ±ma direkt bu baÅyapÄ±t geldi! Bence tam Åu an izlemen gereken Åey kesinlikle bu: ð¬";
+
+        if (txt.includes('aÄla') || txt.includes('Ã¼zgÃ¼n') || txt.includes('dram') || txt.includes('sÄ±kkÄ±n') || txt.includes('kÃ¶tÃ¼ hissediyorum')) {
+            targetGenres = ['dram', 'romantik', 'biyografi'];
+            aiMessage = "Bazen iÃ§ini dÃ¶kmek en iyisidir... ð¢ Duygusal olarak gerÃ§ekten Ã§ok gÃ¼Ã§lÃ¼ bir yapÄ±m buldum, mendillerini hazÄ±rla:";
+        } 
+        else if (txt.includes('gÃ¼l') || txt.includes('komedi') || txt.includes('eÄlen') || txt.includes('Ã§erez') || txt.includes('yorgun')) {
+            targetGenres = ['komedi', 'animasyon', 'eÄlence', 'aile'];
+            aiMessage = "GÃ¼lmeye ve kafanÄ± daÄÄ±tmaya ihtiyacÄ±n olduÄunu seziyorum! ð¤£ Seni hiÃ§ yormayacak Ã§ok keyifli bir Ã¶nerim var:";
+        } 
+        else if (txt.includes('kork') || txt.includes('gerilim') || txt.includes('kan') || txt.includes('dehÅet')) {
+            targetGenres = ['korku', 'gerilim'];
+            aiMessage = "AnlaÅÄ±ldÄ±, biraz adrenalin istiyorsun! ð» Gece tek baÅÄ±na izlerken arkana baktÄ±racak o yapÄ±mÄ± buldum:";
+        } 
+        else if (txt.includes('aksiyon') || txt.includes('patlama') || txt.includes('silah') || txt.includes('heyecan')) {
+            targetGenres = ['aksiyon', 'macera', 'savaÅ'];
+            aiMessage = "Kemerleri baÄla! ð¥ NabzÄ±nÄ± yÃ¼kseltecek ve baÅÄ±ndan sonuna kadar aksiyonu dÃ¼Åmeyen Åu yapÄ±ma bayÄ±lacaksÄ±n:";
+        }
+
+        let filteredCatalog = allSearchData;
+        if (targetGenres.length > 0 && allSearchData.length > 0) {
+            const strictFilter = allSearchData.filter(item => {
+                if(!item.turler) return false;
+                const itmTur = item.turler.toLowerCase();
+                return targetGenres.some(g => itmTur.includes(g));
+            });
+            if(strictFilter.length > 0) filteredCatalog = strictFilter;
+        }
+
+        if (!filteredCatalog || filteredCatalog.length === 0) {
+            chatBox.innerHTML += `<div class="ai-bubble system">Åu an sistemimde tam aradÄ±ÄÄ±n Åeye uygun bir iÃ§erik bulamadÄ±m... BaÅka bir tÃ¼r denemeye ne dersin? ð¤</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+        }
+
+        const reelFilm = filteredCatalog[Math.floor(Math.random() * filteredCatalog.length)];
+        let fImg = reelFilm.afis || reelFilm.kapak;
+        if(fImg && !fImg.startsWith('http')) fImg = 'assets/images/afisler/' + fImg;
+        const dataStr = encodeURIComponent(JSON.stringify(reelFilm)).replace(/'/g, "%27");
+
+        chatBox.innerHTML += `
+            <div class="ai-bubble system">
+                ${aiMessage}
+                <div class="ai-movie-card" onclick="modalAc('${dataStr}')">
+                    <img src="${fImg}" class="ai-movie-img">
+                    <div class="ai-movie-info">
+                        <h4>${reelFilm.baslik}</h4>
+                        <p>${reelFilm.turler || 'Ãnerilen Ä°Ã§erik'}</p>
+                        <div class="ai-play-btn ripple" onclick="event.stopPropagation(); git('${dataStr}')"><i class="fas fa-play"></i> Hemen Ä°zle</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    function turleriGoster() { document.getElementById('genreModal').style.display = 'flex'; }
+    
+    async function turSec(turAdi) {
+        document.getElementById('genreModal').style.display = 'none';
+        kategoriAc('filtreli', turAdi + ' Ä°Ã§erikleri', turAdi);
+    }
+
+    async function kategoriAc(endpoint, baslik, filterGenre = null) {
+        document.getElementById('catTitle').innerText = baslik;
+        document.body.classList.add('no-scroll');
+        
+        showLoader();
+        await new Promise(r => setTimeout(r, 50)); 
+
+        try {
+            let data = [];
+            if (endpoint === 'film') {
+                data = await smartFetch('film.php');
+            } else if (endpoint === 'dizi') {
+                data = await smartFetch('dizi.php');
+            } else {
+                const fRes = await smartFetch('film.php');
+                const dRes = await smartFetch('dizi.php');
+                const tumu = [...fRes, ...dRes];
+                
+                if (endpoint === 'belgesel') {
+                    data = tumu.filter(item => item.turler && item.turler.toLowerCase().includes('belgesel'));
+                } else if (filterGenre) {
+                    const genreLower = filterGenre.toLocaleLowerCase('tr');
+                    data = tumu.filter(item => item.turler && item.turler.toLocaleLowerCase('tr').includes(genreLower));
+                }
+            }
+
+            currentCategoryData = data;
+            renderCategoryGrid(data);
+            document.getElementById('categoryModal').style.display = 'flex';
+
+        } catch (e) { 
+            alert("Veriler yÃ¼klenirken bir hata oluÅtu."); 
+        } finally { 
+            hideLoader(); 
+        }
+    }
+
+    function renderCategoryGrid(items) {
+        const grid = document.getElementById('categoryGrid');
+        grid.innerHTML = '';
+        if (items.length === 0) {
+            grid.innerHTML = '<div style="color:#aaa; width:100%; text-align:center; padding: 50px 0;">Bu kategoride iÃ§erik bulunamadÄ±.</div>';
+            return;
+        }
+        items.forEach(item => {
+            let img = item.afis || item.kapak;
+            if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+            const dataStr = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+            
+            grid.innerHTML += `
+                <div class="grid-card fade-in-section is-visible" onclick="modalAc('${dataStr}')">
+                    <img src="${img}" loading="lazy">
+                    <div class="grid-title">${item.baslik}</div>
+                </div>`;
+        });
+    }
+
+    function kategoriAra() {
+        const term = document.getElementById('catSearch').value.toLowerCase();
+        const filtered = currentCategoryData.filter(item => item.baslik.toLowerCase().includes(term));
+        renderCategoryGrid(filtered);
+    }
+
+    function kategoriKapat() {
+        document.getElementById('categoryModal').style.display = 'none';
+        document.getElementById('catSearch').value = '';
+        if (!document.getElementById('myModal').classList.contains('active')) {
+            document.body.classList.remove('no-scroll');
+        }
+    }
+
+    async function odayaKatil() {
+        const roomCode = prompt("LÃ¼tfen katÄ±lmak istediÄiniz 6 Haneli Oda Kodunu girin (Ãrn: A5X2B):");
+        if (!roomCode || roomCode.trim() === "") return;
+        const code = roomCode.trim().toUpperCase();
+        try {
+            showLoader();
+            await new Promise(r => setTimeout(r, 50));
+
+            const res = await fetch(`backend/api/sosyal/sohbet.php?oda=${code}`);
+            const data = await res.json();
+
+            if (data.durum && data.veri && data.veri.length > 0) {
+                const sysMsg = data.veri.find(m => m.mesaj && m.mesaj.startsWith('ROOM_DATA:'));
+                if (sysMsg) {
+                    let base64Data = sysMsg.mesaj.replace('ROOM_DATA:', '').trim();
+                    if(base64Data.includes('%')) base64Data = decodeURIComponent(base64Data);
+                    let item = JSON.parse(decodeURIComponent(escape(atob(base64Data))));
+
+                    localStorage.setItem('detay_icerik', JSON.stringify(item));
+                    localStorage.setItem('izlenecek_film', JSON.stringify(item));
+
+                    let isDizi = item.id && String(item.id).startsWith('dizi') || item.tur_etiketi === 'dizi' || (item.turler && String(item.turler).toLowerCase().includes('dizi')) || item.sezon_sayisi;
+                    let slug = item.slug || createSlug(item.baslik);
+                    
+                    if (isDizi) window.location.href = `izleme.php?tip=dizi&slug=${slug}&room=${code}`;
+                    else window.location.href = `izleme.php?tip=film&slug=${slug}&room=${code}`;
+                } else {
+                    alert("Oda kodu geÃ§ersiz veya odadaki yayÄ±n sona ermiÅ.");
+                    hideLoader();
+                }
+            } else {
+                alert("Oda bulunamadÄ±! Kodu yanlÄ±Å yazmÄ±Å olabilirsiniz.");
+                hideLoader();
+            }
+        } catch(e) {
+            alert("Sistem veriyi Ã§Ã¶zemedi veya baÄlantÄ± koptu. LÃ¼tfen kodun doÄruluÄundan emin olun.");
+            hideLoader();
+        }
+    }
+
+    async function watchPartyKur() {
+        if(!activeModalItem) return;
+        const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+        localStorage.setItem('detay_icerik', JSON.stringify(activeModalItem));
+        localStorage.setItem('izlenecek_film', JSON.stringify(activeModalItem));
+
+        const jsonStr = JSON.stringify(activeModalItem);
+        const base64Data = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        try {
+            await fetch('backend/api/sosyal/sohbet.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    oda: roomCode,
+                    kullanici_id: 'SYSTEM_ROOM_DATA',
+                    kullanici_ad: 'SÄ°STEM',
+                    mesaj: 'ROOM_DATA:' + base64Data
+                })
+            });
+        } catch(e) { console.error(e); }
+        
+        alert(`Birlikte Ä°zle OdanÄ±z HazÄ±r! ð¿\nOda Kodunuz: ${roomCode}\n\nArkadaÅlarÄ±na sadece bu 6 haneli kodu gÃ¶nder. Åimdi izleme sayfasÄ±na yÃ¶nlendiriliyorsunuz...`);
+        
+        let isDizi = activeModalItem.id && String(activeModalItem.id).startsWith('dizi') || activeModalItem.tur_etiketi === 'dizi' || (activeModalItem.turler && String(activeModalItem.turler).toLowerCase().includes('dizi')) || activeModalItem.sezon_sayisi;
+        let slug = activeModalItem.slug || createSlug(activeModalItem.baslik);
+        
+        if (isDizi) window.location.href = `izleme.php?tip=dizi&slug=${slug}&room=${roomCode}`;
+        else window.location.href = `izleme.php?tip=film&slug=${slug}&room=${roomCode}`;
+    }
+
+    async function watchPartyKurFromTinder(item) {
+        const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+        localStorage.setItem('detay_icerik', JSON.stringify(item));
+        localStorage.setItem('izlenecek_film', JSON.stringify(item));
+
+        const jsonStr = JSON.stringify(item);
+        const base64Data = btoa(unescape(encodeURIComponent(jsonStr)));
+
+        try {
+            await fetch('backend/api/sosyal/sohbet.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    oda: roomCode,
+                    kullanici_id: 'SYSTEM_ROOM_DATA',
+                    kullanici_ad: 'SÄ°STEM',
+                    mesaj: 'ROOM_DATA:' + base64Data
+                })
+            });
+        } catch(e) { console.error(e); }
+        
+        showToast(`EÅleÅme BaÅarÄ±lÄ±! OdanÄ±z Kuruldu: ${roomCode} â¤ï¸`);
+        
+        let isDizi = item.id && String(item.id).startsWith('dizi') || item.tur_etiketi === 'dizi' || item.tip === 'dizi' || (item.turler && String(item.turler).toLowerCase().includes('dizi')) || item.sezon_sayisi;
+        let slug = item.slug || createSlug(item.baslik);
+        
+        setTimeout(() => {
+            if (isDizi) window.location.href = `izleme.php?tip=dizi&slug=${slug}&room=${roomCode}`;
+            else window.location.href = `izleme.php?tip=film&slug=${slug}&room=${roomCode}`;
+        }, 1500);
+    }
+
+    async function fetchBildirimler() {
+        try {
+            const resGenel = await fetch('backend/api/bildirim/getir.php').catch(()=>null);
+            let genelList = [];
+            if(resGenel) {
+                const dataGenel = await resGenel.json();
+                genelList = Array.isArray(dataGenel) ? dataGenel : (dataGenel.veri || []);
+            }
+
+            let userId = mainUser.id;
+            const resOzel = await fetch(`backend/api/bildirim/getir.php?user_id=${userId}`).catch(()=>null);
+            let ozelList = [];
+            if(resOzel) {
+                const dataOzel = await resOzel.json();
+                ozelList = Array.isArray(dataOzel) ? dataOzel : (dataOzel.veri || []);
+            }
+
+            let tumu = [...genelList, ...ozelList];
+            bildirimler = [];
+            let map = new Map();
+
+            tumu.forEach(b => {
+                if(!map.has(b.id)) {
+                    map.set(b.id, true);
+                    if(!b.user_id || b.user_id === "" || b.user_id === "0" || String(b.user_id) === String(userId)) {
+                        bildirimler.push(b);
+                    }
+                }
+            });
+
+            bildirimler.sort((a, b) => b.id - a.id);
+            renderBildirimler();
+        } catch(e) {}
+    }
+
+    function renderBildirimler() {
+        const list = document.getElementById('notifList');
+        const badge = document.getElementById('notifBadge');
+        list.innerHTML = '';
+        
+        let okunanlar = JSON.parse(localStorage.getItem(getNotifKey()) || '[]');
+        let unreadCount = 0;
+
+        if (bildirimler.length === 0) {
+            list.innerHTML = '<div style="padding: 40px 20px; text-align: center; color: #777;"><i class="fas fa-bell-slash" style="font-size:3rem; margin-bottom:15px; opacity:0.3;"></i><br>YakÄ±n zamanda bildirim almadÄ±nÄ±z.</div>';
+        } else {
+            bildirimler.forEach(b => {
+                const isRead = okunanlar.includes(String(b.id));
+                if (!isRead) unreadCount++;
+
+                const unreadClass = isRead ? '' : 'unread';
+                let icon = 'fa-bell'; let iconBg = 'rgba(255,255,255,0.1)';
+                if(b.tur === 'yeni') { icon = 'fa-star'; iconBg = 'var(--stat-color)'; }
+                if(b.tur === 'bakim') { icon = 'fa-exclamation-triangle'; iconBg = 'var(--primary-red)'; }
+                if(b.user_id) { icon = 'fa-envelope'; iconBg = '#0071eb'; }
+
+                let actionClick = (b.icerik_id && b.icerik_tip) ? `onclick="bildirimdenIcerigeGit('${b.icerik_id}', '${b.id}')"` : `onclick="bildirimTikla('${b.id}')"`;
+                
+                list.innerHTML += `
+                    <div class="notif-item ${unreadClass}" ${actionClick}>
+                        <div class="notif-item-icon" style="${isRead ? '' : 'background: ' + iconBg}"><i class="fas ${icon}"></i></div>
+                        <div class="notif-content">
+                            <div class="notif-title">${b.baslik}</div>
+                            <div class="notif-text">${b.mesaj}</div>
+                            <div class="notif-time"><i class="far fa-clock"></i> ${b.tarih || 'YakÄ±n zamanda'}</div>
+                        </div>
+                        ${!isRead ? '<div class="unread-dot"></div>' : ''}
+                    </div>
+                `;
+            });
+        }
+        if (unreadCount > 0) { badge.innerText = unreadCount > 9 ? '9+' : unreadCount; badge.style.display = 'flex'; } 
+        else { badge.style.display = 'none'; }
+    }
+
+    function toggleNotif() {
+        const dropdown = document.getElementById('notifDropdown');
+        dropdown.classList.toggle('active');
+        document.getElementById('profileMenu').classList.remove('active'); 
+        document.getElementById('searchBox').classList.remove('active'); 
+        document.getElementById('searchResults').classList.remove('active');
+    }
+
+    function bildirimleriOkunduIsaretle(event) {
+        event.stopPropagation(); 
+        let okunanlar = bildirimler.map(b => String(b.id));
+        localStorage.setItem(getNotifKey(), JSON.stringify(okunanlar));
+        renderBildirimler();
+    }
+
+    function bildirimTikla(id) {
+        let okunanlar = JSON.parse(localStorage.getItem(getNotifKey()) || '[]');
+        if(!okunanlar.includes(String(id))) { 
+            okunanlar.push(String(id)); 
+            localStorage.setItem(getNotifKey(), JSON.stringify(okunanlar)); 
+        }
+        renderBildirimler();
+    }
+
+    async function bildirimdenIcerigeGit(icerikId, notifId) {
+        bildirimTikla(notifId); 
+        showLoader();
+        await new Promise(r => setTimeout(r, 50));
+
+        try {
+            const [fRes, dRes] = await Promise.all([smartFetch('film.php'), smartFetch('dizi.php')]);
+            const allItems = [...fRes, ...dRes];
+            const hedefItem = allItems.find(i => String(i.id) === String(icerikId));
+
+            if(hedefItem) {
+                localStorage.setItem('detay_icerik', JSON.stringify(hedefItem));
+                localStorage.setItem('izlenecek_film', JSON.stringify(hedefItem));
+                let isDizi = hedefItem.sezon_sayisi || (hedefItem.turler && hedefItem.turler.toLowerCase().includes('dizi')) || String(hedefItem.id).startsWith('dizi') || hedefItem.tip === 'dizi';
+                let slug = hedefItem.slug || createSlug(hedefItem.baslik);
+                
+                if (isDizi) window.location.href = `dizi-detay.php?slug=${slug}`;
+                else window.location.href = `film-detay.php?slug=${slug}`;
+            } else {
+                alert("Bu iÃ§erik artÄ±k mevcut deÄil.");
+                hideLoader();
+            }
+        } catch(e) { hideLoader(); }
+    }
+
+    function toggleMenu() { document.getElementById('profileMenu').classList.toggle('active'); document.getElementById('notifDropdown').classList.remove('active'); }
+    function toggleSearch() { document.getElementById('searchBox').classList.toggle('active'); if(document.getElementById('searchBox').classList.contains('active')) document.getElementById('searchInput').focus(); }
+
+    async function smartFetch(endpoint) {
+        try {
+            const res = await fetch(`${API_BASE}/${endpoint}`);
+            const json = await res.json();
+            let arr = Array.isArray(json) ? json : (json.icerikler || json.veri || []);
+            return arr;
+        } catch (e) { return []; }
+    }
+
+    async function baslat() {
+        showLoader();
+        await new Promise(r => setTimeout(r, 50));
+        
+        await heroYukle();
+        const populerler = await smartFetch('populer.php');
+        const trendler = await smartFetch('trend.php');
+        const diziler = await smartFetch('dizi.php');
+        const filmler = await smartFetch('film.php');
+        const yakinda = await smartFetch('yakinda.php');
+
+        hideLoader();
+        
+        checkContinueWatching();
+
+        if (populerler.length > 0) {
+            renderTop10Row('TÃ¼rkiye\'de Top 10', populerler.slice(0, 10));
+            // EditÃ¶rÃ¼n SeÃ§imleri iÃ§in popÃ¼lerler dizisinden harmanlanmÄ±Å Ã¶zel veri (Admin panele baÄlanana kadar sahte veri oluÅturuyoruz)
+            const editorPicks = [...populerler].sort(() => 0.5 - Math.random()).slice(0, 5);
+            renderEditorPicks(editorPicks);
+        }
+
+        if (yakinda && yakinda.length > 0) {
+            renderUpcomingRow('YakÄ±nda Gelecekler', yakinda);
+        }
+        
+        let yeniEklenenler = [];
+        for(let i=0; i < 8; i++) {
+            if(filmler[i]) yeniEklenenler.push(filmler[i]);
+            if(diziler[i]) yeniEklenenler.push(diziler[i]);
+        }
+        if (yeniEklenenler.length > 0) {
+            renderRow('Yeni Eklenenler', yeniEklenenler, false);
+        }
+
+        renderRow('GÃ¼ndemdekiler', trendler);
+        renderRow('Diziler', diziler, true);
+        renderRow('Filmler', filmler, true);
+
+        observeNewElements();
+    }
+
+    function checkContinueWatching() {
+        let history = JSON.parse(localStorage.getItem('kullanici_listem') || '[]');
+        if(history.length > 0) {
+            let lastWatched = history[0];
+            let cwArea = document.getElementById('continueWatchingArea');
+            if(lastWatched && lastWatched.baslik) {
+                let img = lastWatched.afis || lastWatched.kapak || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=200';
+                if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+                const str = encodeURIComponent(JSON.stringify(lastWatched)).replace(/'/g, "%27");
+                
+                cwArea.innerHTML = `
+                <div style="padding: 0 5%; margin-top:20px; margin-bottom: 20px;">
+                    <div class="row-header"><i class="fas fa-history" style="color:var(--primary-red);"></i> KaldÄ±ÄÄ±n Yerden Devam Et</div>
+                    <div style="display:flex; align-items:center; background:#181818; padding:12px; border-radius:12px; border:1px solid #333; gap:15px; cursor:pointer; max-width:400px; transition:0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.5);" onclick="git('${str}')" onmouseover="this.style.borderColor='var(--primary-red)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.borderColor='#333'; this.style.transform='none';">
+                        <img src="${img}" style="width:80px; height:50px; object-fit:cover; border-radius:6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:1.05rem; color:white; margin-bottom:6px;">${lastWatched.baslik}</div>
+                            <div style="width:100%; background:#333; height:5px; border-radius:3px; overflow:hidden;"><div style="width:45%; background:var(--primary-red); height:100%; border-radius:3px; box-shadow: 0 0 5px var(--primary-red);"></div></div>
+                        </div>
+                        <i class="fas fa-play-circle" style="font-size:2.2rem; color:var(--primary-red); transition:0.3s;"></i>
+                    </div>
+                </div>
+                `;
+                cwArea.style.display = 'block';
+            }
+        }
+    }
+
+    function renderEditorPicks(data) {
+        if (!data || data.length === 0) return;
+        data.forEach(item => { if(!allSearchData.find(x=>x.id===item.id)) allSearchData.push(item); });
+        
+        let html = `
+        <div class="row fade-in-section">
+            <div class="row-header" style="color: var(--editor-gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);">
+                <i class="fas fa-crown"></i> EditÃ¶rÃ¼n SeÃ§imleri
+            </div>
+            <div class="editor-sliders">
+        `;
+        
+        data.forEach(item => {
+            let img = item.kapak || item.afis;
+            if(img && !img.startsWith('http')) img = 'assets/images/kapaklar/' + img;
+            const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+            
+            html += `
+            <div class="editor-card" onclick="modalAc('${str}')">
+                <div class="editor-badge"><i class="fas fa-star"></i> Ãzel SeÃ§im</div>
+                <img src="${img}">
+                <div class="editor-info">
+                    <div class="editor-title">${item.baslik}</div>
+                    <div style="color:#ddd; font-size:0.85rem; margin-top:5px;">${item.turler || 'Ãne ÃÄ±kan YapÄ±m'} â¢ ${item.yil || ''}</div>
+                </div>
+            </div>`;
+        });
+        
+        html += `</div></div>`;
+        document.getElementById('editorPicksArea').innerHTML = html;
+    }
+
+    function renderTop10Row(baslik, data) {
+        data.forEach(item => { if(!allSearchData.find(x=>x.id===item.id)) allSearchData.push(item); });
+        let html = `<div class="row fade-in-section"><div class="row-header">${baslik}</div><div class="sliders">`;
+        data.forEach((item, index) => {
+            let img = item.afis || item.kapak;
+            if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+            const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+            html += `<div class="top10-card" onclick="modalAc('${str}')"><div class="top10-number">${index + 1}</div><img src="${img}" class="top10-img"></div>`;
+        });
+        html += `</div></div>`;
+        document.getElementById('contentArea').insertAdjacentHTML('beforeend', html);
+    }
+
+    function renderUpcomingRow(baslik, data) {
+        let html = `<div class="row fade-in-section"><div class="row-header"><i class="fas fa-calendar-alt" style="color:var(--primary-red);"></i> ${baslik}</div><div class="sliders">`;
+        
+        let hatirlaticilar = JSON.parse(localStorage.getItem(getHatirlaticiKey()) || '[]');
+
+        data.forEach(item => {
+            let img = item.kapak || item.afis;
+            if(img && !img.startsWith('http')) img = 'assets/images/kapaklar/' + img;
+            
+            let isReminded = hatirlaticilar.includes(String(item.id));
+            let btnText = isReminded ? '<i class="fas fa-check"></i> Bekleniyor' : '<i class="fas fa-bell"></i> HatÄ±rlat';
+            let btnStyle = isReminded ? 'background: white; color: black; border-color:white;' : '';
+
+            // YAKINDA GELECEKLER MANTIÄI: is_upcoming bayraÄÄ±nÄ± ekliyoruz
+            item.is_upcoming = true; 
+            const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+
+            html += `
+            <div class="upcoming-card" onclick="modalAc('${str}')">
+                <img src="${img}">
+                <div class="up-info">
+                    <div>
+                        <div class="up-date">${item.cikis_tarihi || 'YakÄ±nda!'}</div>
+                        <div class="up-title" title="${item.baslik}">${item.baslik}</div>
+                    </div>
+                    <button class="btn-remind ripple" id="remind-btn-${item.id}" style="${btnStyle}" onclick="event.stopPropagation(); hatirlaticiEkle('${item.id}', '${item.baslik.replace(/'/g, "\\'")}', this)">
+                        ${btnText}
+                    </button>
+                </div>
+            </div>`;
+        });
+        html += `</div></div>`;
+        document.getElementById('contentArea').insertAdjacentHTML('beforeend', html);
+    }
+
+    async function hatirlaticiEkle(icerikId, baslik, btn) {
+        let hatirlaticilar = JSON.parse(localStorage.getItem(getHatirlaticiKey()) || '[]');
+        
+        if(hatirlaticilar.includes(String(icerikId))) {
+            showToast("Bu iÃ§erik iÃ§in zaten hatÄ±rlatÄ±cÄ± kurdunuz!");
+            return;
+        }
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            await fetch('backend/api/icerik/hatirlatici_ekle.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    user_id: mainUser.id, 
+                    icerik_id: icerikId, 
+                    baslik: baslik 
+                })
+            });
+        } catch(e) { console.error("Sunucuya baÄlanÄ±lamadÄ±."); }
+
+        hatirlaticilar.push(String(icerikId));
+        localStorage.setItem(getHatirlaticiKey(), JSON.stringify(hatirlaticilar));
+
+        btn.style.background = 'white';
+        btn.style.color = 'black';
+        btn.style.borderColor = 'white';
+        btn.innerHTML = '<i class="fas fa-check"></i> Bekleniyor';
+        
+        showToast(`${baslik} Ã§Ä±ktÄ±ÄÄ±nda sana anÄ±nda haber vereceÄiz! ð¿`);
+    }
+
+    function renderRow(baslik, data, expandable = false) {
+        if (!data || data.length === 0) return;
+        data.forEach(item => { if(!allSearchData.find(x=>x.id===item.id)) allSearchData.push(item); });
+
+        const rowId = 'row_' + Math.random().toString(36).substr(2, 9);
+        let headerHtml = `<div class="row-header">${baslik} ${expandable ? `<button class="toggle-row-btn ripple" onclick="toggleRow('${rowId}', this)"><i class="fas fa-chevron-down"></i></button>` : ''}</div>`;
+        let slidersHtml = `<div class="sliders" id="${rowId}">`;
+        
+        data.forEach(item => {
+            let img = item.afis || item.kapak;
+            if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+            const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+            
+            let yasBadge = item.yas ? `<div class="badge badge-age">+${item.yas}</div>` : '';
+            let gercekPuan = item.imdb_puani || item.imdb || item.puan;
+            let imdbBadge = gercekPuan ? `<div class="badge"><i class="fas fa-star" style="color:gold;"></i> ${gercekPuan}</div>` : '';
+
+            slidersHtml += `<div class="card" onclick="modalAc('${str}')"><div class="card-img-wrapper">${yasBadge}${imdbBadge}<img src="${img}" loading="lazy"></div><div class="card-info"><div class="card-title">${item.baslik}</div></div></div>`;
+        });
+        slidersHtml += `</div>`;
+        document.getElementById('contentArea').insertAdjacentHTML('beforeend', `<div class="row fade-in-section">${headerHtml}${slidersHtml}</div>`);
+    }
+
+    function toggleRow(rowId, btn) { 
+        document.getElementById(rowId).classList.toggle('two-rows'); 
+        btn.classList.toggle('open'); 
+    }
+
+    async function heroYukle() {
+        const data = await smartFetch('trend.php');
+        if (data.length > 0) {
+            const container = document.getElementById('heroSlider');
+            const dotsContainer = document.getElementById('heroDots');
+            container.innerHTML = ''; dotsContainer.innerHTML = '';
+
+            data.slice(0, 5).forEach((item, index) => {
+                let bg = item.kapak || item.afis;
+                if(bg && !bg.startsWith('http')) bg = 'assets/images/kapaklar/' + bg;
+                const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+
+                container.innerHTML += `<div class="hero-slide" style="background-image: url('${bg}')"><div class="hero-content"><h1 class="hero-title">${item.baslik}</h1><div class="hero-tags"><span>${item.yil || ''}</span> â¢ <span>${item.turler ? item.turler.split(',')[0] : ''}</span></div><div class="hero-btns"><button class="btn btn-play ripple" onclick="git('${str}')"><i class="fas fa-play"></i> Oynat</button><button class="btn btn-info ripple" onclick="modalAc('${str}')"><i class="fas fa-info-circle"></i> Detaylar</button></div></div></div>`;
+                const dot = document.createElement('div');
+                dot.className = index === 0 ? 'dot active ripple' : 'dot ripple';
+                dotsContainer.appendChild(dot);
+            });
+            container.addEventListener('scroll', () => {
+                const index = Math.round(container.scrollLeft / container.offsetWidth);
+                document.querySelectorAll('.dot').forEach((d, i) => i === index ? d.classList.add('active') : d.classList.remove('active'));
+            });
+        }
+    }
+
+    function beniSasirt() {
+        if(allSearchData.length === 0) return;
+        const randomItem = allSearchData[Math.floor(Math.random() * allSearchData.length)];
+        modalAc(encodeURIComponent(JSON.stringify(randomItem)).replace(/'/g, "%27"));
+    }
+
+    function setupSearch() {
+        const input = document.getElementById('searchInput');
+        input.addEventListener('input', function() {
+            const term = this.value.toLowerCase().trim();
+            const resDiv = document.getElementById('searchResults');
+            const itemsCont = document.getElementById('searchItemsCont');
+            const chipsCont = document.getElementById('searchChips');
+            
+            if(term.length < 1) { resDiv.classList.remove('active'); return; }
+            
+            let filtered = allSearchData.filter(i => i.baslik.toLowerCase().includes(term) || (i.oyuncular && i.oyuncular.toLowerCase().includes(term)));
+            itemsCont.innerHTML = '';
+            chipsCont.innerHTML = '';
+            
+            if(filtered.length > 0) {
+                let sampleActors = ['Leonardo DiCaprio', 'Brad Pitt', 'Tom Hardy', 'Morgan Freeman', 'Al Pacino'];
+                let matchedActors = sampleActors.filter(a => a.toLowerCase().includes(term));
+                if(matchedActors.length > 0) {
+                    matchedActors.forEach(act => {
+                        chipsCont.innerHTML += `<div class="s-chip ripple" onclick="document.getElementById('searchInput').value='${act}'; document.getElementById('searchInput').dispatchEvent(new Event('input'));"><i class="fas fa-user"></i> ${act}</div>`;
+                    });
+                }
+
+                filtered.slice(0, 5).forEach(item => {
+                    let img = item.kapak || item.afis;
+                    if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+                    const str = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
+                    itemsCont.innerHTML += `<div class="s-item ripple" onclick="modalAc('${str}')"><img src="${img}" class="s-img"><div><h4>${item.baslik}</h4><span style="color:#aaa; font-size:0.8rem">${item.yil||''}</span></div></div>`;
+                });
+                resDiv.classList.add('active');
+            } else {
+                itemsCont.innerHTML = '<div style="padding:15px; text-align:center; color:#777;">SonuÃ§ bulunamadÄ±.</div>';
+                resDiv.classList.add('active');
+            }
+        });
+    }
+
+    function modalAc(str) {
+        const item = JSON.parse(decodeURIComponent(str));
+        activeModalItem = item;
+        document.getElementById('mTitle').innerText = item.baslik;
+        document.getElementById('mDesc').innerText = item.ozet || 'AÃ§Ä±klama bulunmuyor.';
+        document.getElementById('mYear').innerText = item.yil || '2024';
+        let bg = item.kapak || item.afis;
+        if(bg && !bg.startsWith('http')) bg = 'assets/images/kapaklar/' + bg;
+        document.getElementById('mHero').style.backgroundImage = `url('${bg}')`;
+        document.getElementById('searchResults').classList.remove('active');
+        
+        const mBtnsContainer = document.getElementById('mBtnsContainer');
+        mBtnsContainer.innerHTML = ''; // Ãnceki butonlarÄ± temizle
+        document.getElementById('mMatchBadge').style.display = 'inline-block';
+
+        if (item.tip === 'guncelleme') {
+            document.getElementById('mMatchBadge').style.display = 'none'; 
+            mBtnsContainer.innerHTML = `
+                <button class="btn btn-info btn-full-width ripple" onclick="modalKapat()">
+                    <i class="fas fa-check"></i> AnladÄ±m
+                </button>
+            `;
+        } 
+        else if (item.is_upcoming) {
+            // YAKINDA GELECEKLER KONTROLÃ - Play butonlarÄ±nÄ± gizler, hatÄ±rlat butonunu getirir.
+            document.getElementById('mMatchBadge').style.display = 'none'; 
+            
+            let hatirlaticilar = JSON.parse(localStorage.getItem(getHatirlaticiKey()) || '[]');
+            let isReminded = hatirlaticilar.includes(String(item.id));
+            let btnText = isReminded ? '<i class="fas fa-check"></i> HatÄ±rlatÄ±cÄ± Kuruldu' : '<i class="fas fa-bell"></i> ÃÄ±kÄ±nca Bana HatÄ±rlat';
+
+            mBtnsContainer.innerHTML = `
+                <button class="btn btn-modal-remind ripple" onclick="hatirlaticiEkle('${item.id}', '${item.baslik.replace(/'/g, "\\'")}', this)">
+                    ${btnText}
+                </button>
+                <button class="btn btn-info btn-full-width ripple" onclick="detayaGit()">
+                    <i class="fas fa-info-circle"></i> Detaylar
+                </button>
+            `;
+        }
+        else {
+            // STANDART Ä°ÃERÄ°K BUTONLARI
+            mBtnsContainer.innerHTML = `
+                <button class="btn btn-play btn-full-width ripple" onclick="oynatModal()" style="background: #ffffff !important; color: #000000 !important; border: none !important; font-size: 1.1rem; padding: 16px;">
+                    <i class="fas fa-play"></i> Hemen Ä°zle 
+                </button> 
+                <button class="btn btn-info btn-kanka ripple" onclick="kankaIleIzle()">
+                    <i class="fas fa-robot"></i> Sanal Kanka ile Ä°zle
+                </button>
+                <button class="btn btn-info ripple" onclick="detayaGit()">
+                    <i class="fas fa-info-circle"></i> Detaylar 
+                </button> 
+                <button class="btn btn-info ripple" onclick="watchPartyKur()">
+                    <i class="fas fa-users"></i> Oda Kur
+                </button>
+            `;
+        }
+
+        document.getElementById('myModal').classList.add('active');
+        document.body.classList.add('no-scroll');
+    }
+
+    function modalKapat() { 
+        document.getElementById('myModal').classList.remove('active'); 
+        if (document.getElementById('categoryModal').style.display !== 'flex' && document.getElementById('tinderModal').classList.contains('active') === false) {
+            document.body.classList.remove('no-scroll'); 
+        }
+    }
+    
+    function oynatModal() { git(encodeURIComponent(JSON.stringify(activeModalItem)).replace(/'/g, "%27")); }
+    function detayaGit() { git(encodeURIComponent(JSON.stringify(activeModalItem)).replace(/'/g, "%27"), true); }
+    
+function kankaIleIzle() { 
+    localStorage.setItem('detay_icerik', JSON.stringify(activeModalItem));
+    localStorage.setItem('izlenecek_film', JSON.stringify(activeModalItem));
+    
+    let isDizi = activeModalItem.id && String(activeModalItem.id).startsWith('dizi') || activeModalItem.tur_etiketi === 'dizi' || (activeModalItem.turler && String(activeModalItem.turler).toLowerCase().includes('dizi')) || activeModalItem.sezon_sayisi;
+    let slug = activeModalItem.slug || activeModalItem.id;
+    let tip = isDizi ? 'dizi' : 'film';
+    
+    window.location.href = `izleme-kanka.php?tip=${tip}&slug=${slug}`; 
+}
+
+    function git(str, forceDetail = false) {
+        const item = JSON.parse(decodeURIComponent(str));
+        localStorage.setItem('detay_icerik', JSON.stringify(item));
+        localStorage.setItem('izlenecek_film', JSON.stringify(item));
+        
+        let isDizi = item.id && String(item.id).startsWith('dizi') || item.tur_etiketi === 'dizi' || item.tip === 'dizi' || (item.turler && String(item.turler).toLowerCase().includes('dizi')) || item.sezon_sayisi;
+        let slug = item.slug || createSlug(item.baslik);
+        
+        if (isDizi) {
+            if (forceDetail) { window.location.href = `dizi-detay.php?slug=${slug}`; } 
+            else { window.location.href = `izleme.php?tip=dizi&slug=${slug}`; }
+        } else {
+            if (forceDetail) { window.location.href = `film-detay.php?slug=${slug}`; } 
+            else { window.location.href = `izleme.php?tip=film&slug=${slug}`; }
+        }
+    }
+
+    function cikisYap() { 
+        if(confirm("ÃÄ±kÄ±Å yapmak istediÄine emin misin?")) {
+            localStorage.removeItem('user_token'); 
+            localStorage.removeItem('user_data');
+            localStorage.removeItem('active_profile');
+            window.location.href = 'index.html'; 
+        }
+    }
+
+    function initSocialFeed() {
+        const sfItems = document.getElementById('sfItems');
+        const activities = [
+            { user: 'Ahmet', action: 'Åu an', movie: 'Prison Break (S1 B4)', time: 'Åimdi' },
+            { user: 'AyÅe', action: 'beÄendi:', movie: 'The Dark Knight', time: '5 dk Ã¶nce' },
+            { user: 'Mehmet', action: 'listeye ekledi:', movie: 'Stranger Things', time: '12 dk Ã¶nce' },
+            { user: 'Zeynep', action: 'Åu an izliyor:', movie: 'Interstellar', time: 'Åimdi' }
+        ];
+
+        activities.forEach((act, i) => {
+            setTimeout(() => {
+                let html = `
+                <div class="sf-item fade-in-section is-visible">
+                    <img src="https://i.pravatar.cc/100?img=${i+10}">
+                    <div class="sf-info">${act.user} ${act.action} <span>${act.movie}</span><br><div class="sf-time">${act.time}</div></div>
+                </div>`;
+                sfItems.insertAdjacentHTML('afterbegin', html);
+            }, i * 2000); 
+        });
+    }
+
+    function openTinderMatch() {
+        if(allSearchData.length === 0) { showToast("Filmler yÃ¼kleniyor, lÃ¼tfen bekleyin..."); return; }
+        document.getElementById('tinderModal').classList.add('active');
+        document.body.classList.add('no-scroll');
+        
+        tinderCards = [...allSearchData].sort(() => 0.5 - Math.random()).slice(0, 5);
+        renderTinderCards();
+    }
+
+    function closeTinderMatch() {
+        document.getElementById('tinderModal').classList.remove('active');
+        if (document.getElementById('categoryModal').style.display !== 'flex') {
+            document.body.classList.remove('no-scroll');
+        }
+    }
+
+    function renderTinderCards() {
+        const stack = document.getElementById('tCardStack');
+        stack.innerHTML = '';
+        if(tinderCards.length === 0) {
+            stack.innerHTML = '<div style="color:white; text-align:center; padding-top:100px;">BugÃ¼nlÃ¼k bu kadar eÅleÅme yeter!</div>';
+            return;
+        }
+
+        tinderCards.forEach((item, i) => {
+            let img = item.afis || item.kapak;
+            if(img && !img.startsWith('http')) img = 'assets/images/afisler/' + img;
+            let z = 100 - i;
+            let s = 1 - (i * 0.05);
+            let y = i * 15;
+            stack.innerHTML += `
+            <div class="t-card" id="tcard_${i}" style="z-index:${z}; transform: translateY(${y}px) scale(${s});">
+                <img src="${img}">
+                <div class="t-card-info">
+                    <h3>${item.baslik}</h3>
+                    <p>${item.turler || 'Bilinmiyor'} â¢ ${item.yil || ''}</p>
+                </div>
+            </div>`;
+        });
+    }
+
+    function tinderSwipe(direction) {
+        if(tinderCards.length === 0) return;
+        const currentCard = document.getElementById(`tcard_0`);
+        const item = tinderCards[0];
+        
+        if(direction === 'left') {
+            currentCard.style.transform = `translateX(-200px) rotate(-20deg) scale(0.8)`;
+            currentCard.style.opacity = '0';
+        } else {
+            currentCard.style.transform = `translateX(200px) rotate(20deg) scale(0.8)`;
+            currentCard.style.opacity = '0';
+            
+            setTimeout(() => {
+                closeTinderMatch();
+                watchPartyKurFromTinder(item);
+            }, 300);
+            return;
+        }
+
+        setTimeout(() => {
+            tinderCards.shift(); 
+            renderTinderCards(); 
+        }, 300);
+    }
+
+    function startMatrixRain() {
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const katakana = 'ã¢ã¡ã«ãµã¿ãããã¤ã£ã©ã¯ã¬ã¶ãããã¤ã£ã­ã·ãããããªã°ã®ã¸ãããã¦ã¥ã¯ã¹ãããã ã¦ã¥ã«ã°ãºãããã¨ã§ã±ã»ãããã¡ã¬ã²ã¼ããããªã©ã³ã½ãããã¢ã¨ã§ã­ã´ã¾ãããã´ãã³';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+        const fontSize = 16;
+        const columns = canvas.width/fontSize;
+        const rainDrops = [];
+        for( let x = 0; x < columns; x++ ) { rainDrops[x] = 1; }
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+            for(let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+                if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.97){ rainDrops[i] = 0; }
+                rainDrops[i]++;
+            }
+        };
+        setInterval(draw, 30);
+        setTimeout(() => { canvas.style.display = 'none'; }, 10000); 
+    }
+</script>
+</body>
+</html>
